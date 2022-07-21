@@ -1,0 +1,79 @@
+---
+# tasks file for coreyramirezgomez.github_release_retriever
+- name: "Include assertions tasks"
+  include_tasks: "assertions.yml"
+- name: "Include facts tasks"
+  include_tasks: "facts.yml"
+- name: Retrive Release Information
+  uri:
+    url: "{{ github_release_retriever_github_url_full }}"
+    return_content: true
+  register: release_info
+  ignore_errors: true
+- name: "Retrieve asset list"
+  set_fact:
+    asset_list: |
+      {% if github_release_retriever_version == 'latest' %}
+      {{ release_info.json.assets }}
+      {% else %}
+      {% for r in release_info.json %}
+      {% if github_release_retriever_version == r.tag_name %}
+      {{ r.assets }}
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+- name: "Assert asset_list was set"
+  assert:
+    that:
+      - asset_list is defined
+      - asset_list | length > 0
+- name: Retrieve Download URLS by asset name
+  set_fact:
+    github_release_retriever_download_urls: |
+      {% set l = [] %}
+      {% for a in asset_list %}
+      {% if github_release_retriever_name in a.name %}
+      {% set l = l.append(a.browser_download_url) %}
+      {% endif %}
+      {% endfor %}
+      {{ github_release_retriever_download_urls + l }}
+  when: github_release_retriever_name is defined
+- name: Retrieve Download URLS by asset filetype
+  set_fact:
+    github_release_retriever_download_urls: |
+      {% set l = [] %}
+      {% for a in asset_list %}
+      {% if github_release_retriever_filetype in a.name %}
+      {% set l = l.append(a.browser_download_url) %}
+      {% endif %}
+      {% endfor %}
+      {{ github_release_retriever_download_urls + l }}
+  when: github_release_retriever_filetype is defined
+- name: Retrieve Download URLS (all)
+  set_fact:
+    github_release_retriever_download_urls: |
+      {% set l = [] %}
+      {% for a in asset_list %}
+      {% set l = l.append(a.browser_download_url) %}
+      {% endfor %}
+      {{ github_release_retriever_download_urls + l }}
+  when:
+    - github_release_retriever_name is not defined
+    - github_release_retriever_filetype is not defined
+- name: Download Releases
+  get_url:
+    url: "{{ url }}"
+    dest: "{{ github_release_retriever_download_path }}"
+  with_items: "{{ github_release_retriever_download_urls }}"
+  loop_control:
+    loop_var: "url"
+  register: github_release_retriever_downloads
+- name: Debug Information
+  debug:
+    msg: |
+      github_release_retriever_download_urls: {{ github_release_retriever_download_urls }}
+      github_release_retriever_downloads ({{ github_release_retriever_downloads.results | length }}): 
+        {% for r in github_release_retriever_downloads.results %}
+        {{ r.url }} ({{ r.status_code }}):
+          {{ r.msg }} - {{ r.dest }}
+        {% endfor %}

@@ -1,0 +1,20 @@
+---
+dependencies: []
+galaxy_info:
+  author: Corey Ramirez-Gomez
+  role_name: github_release_retriever
+  description: Ansible task sequence to retrieve release artifacts from github projects.
+  license: MIT
+  min_ansible_version: 2.1
+  platforms:
+    - name: GenericLinux
+      versions:
+        - all
+    - name: MacOSX
+      versions:
+        - all
+    - name: macOS
+      versions:
+        - all
+  galaxy_tags:
+    - github

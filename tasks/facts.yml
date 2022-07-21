@@ -1,0 +1,8 @@
+- name: "Set github_release_retriever_version to latest when undefined"
+  set_fact:
+    github_release_retriever_version: "latest"
+  when: github_release_retriever_version is not defined or github_release_retriever_version == ''
+- name: "Set github_release_retriever_github_url_full to latest"
+  set_fact:
+    github_release_retriever_github_url_full: "{{ github_release_retriever_github_url_full }}/latest"
+  when: github_release_retriever_version == 'latest'

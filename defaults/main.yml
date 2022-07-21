@@ -1,0 +1,20 @@
+---
+# defaults file for coreyramirezgomez.github_release_retriever
+# Required
+# project/repo; will be prepended with github_release_retriever_github_url_base var and appended with "releases".
+# see vars/main.yml for details.
+# github_release_retriever_project: ""
+
+# Path to download assets to.
+# github_release_retriever_download_path: ""
+
+# Specify the version/tag_name to retrieve. Will default to latest if empty.
+# github_release_retriever_version: "latest"
+
+# Retrieve asset by name
+# github_release_retriever_name: ""
+
+# Retrieve asset by filetype
+# github_release_retriever_filetype: ""
+
+# If neither name or filetype are specified, we retrieve all assets available for specified version/tag_name.
