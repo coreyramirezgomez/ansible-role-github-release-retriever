@@ -1,5 +1,4 @@
 ---
 # vars file for coreyramirezgomez.github_release_retriever
 github_release_retriever_github_url_base: "https://api.github.com/repos"
-github_release_retriever_github_url_full: "{{ github_release_retriever_github_url_base }}/{{ github_release_retriever_project }}/releases"
 github_release_retriever_download_urls: []

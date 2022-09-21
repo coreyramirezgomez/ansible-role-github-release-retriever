@@ -1,5 +1,4 @@
-- name: "Assert project and download_path are defined"
+- name: "Assert github_release_retriever_project is defined"
   assert:
     that:
       - github_release_retriever_project is defined
-      - github_release_retriever_download_path is defined

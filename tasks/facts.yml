@@ -2,7 +2,14 @@
   set_fact:
     github_release_retriever_version: "latest"
   when: github_release_retriever_version is not defined or github_release_retriever_version == ''
-- name: "Set github_release_retriever_github_url_full to latest"
+- name: "Construct github_release_retriever_github_url_full"
+  set_fact:
+    github_release_retriever_github_url_full: "{{ github_release_retriever_github_url_base }}/{{ github_release_retriever_project }}/releases"
+- name: "Append latest to github_release_retriever_github_url_full"
   set_fact:
     github_release_retriever_github_url_full: "{{ github_release_retriever_github_url_full }}/latest"
   when: github_release_retriever_version == 'latest'
+- name: "Set github_release_retriever_download_path to /tmp when undefined"
+  set_fact:
+    github_release_retriever_download_path: "/tmp/"
+  when: github_release_retriever_download_path is not defined or github_release_retriever_download_path == ''

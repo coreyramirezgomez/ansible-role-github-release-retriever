@@ -60,10 +60,11 @@
   when:
     - github_release_retriever_name is not defined
     - github_release_retriever_filetype is not defined
-- name: Download Releases
+- name: "Download Releases"
   get_url:
     url: "{{ url }}"
     dest: "{{ github_release_retriever_download_path }}"
+    mode: 0774
   with_items: "{{ github_release_retriever_download_urls }}"
   loop_control:
     loop_var: "url"
@@ -72,7 +73,7 @@
   debug:
     msg: |
       github_release_retriever_download_urls: {{ github_release_retriever_download_urls }}
-      github_release_retriever_downloads ({{ github_release_retriever_downloads.results | length }}): 
+      github_release_retriever_downloads ( {{ github_release_retriever_downloads.results | length }} ):
         {% for r in github_release_retriever_downloads.results %}
         {{ r.url }} ({{ r.status_code }}):
           {{ r.msg }} - {{ r.dest }}
